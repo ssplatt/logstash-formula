@@ -1,0 +1,5 @@
+SSH_AUTH  %{WORD:module}\(%{DATA}\): %{DATA:status}; %{DATA}rhost=%{IPORHOST:clientip}?%{SPACE}?(user=)?%{USER:username}?%{GREEDYDATA}
+SSH_LOGIN  ^%{WORD:status} %{WORD:method} %{WORD}? ?%{DATA} %{USER:username} %{WORD} %{IPORHOST:clientip} %{WORD} %{POSINT:port} %{WORD:protocol}?:? (%{WORD:cipher} %{GREEDYDATA:fingerprint})?%{GREEDYDATA}?
+SSH_PW_LOGIN  %{WORD:status} %{WORD:method} for %{USER:username} from %{IPORHOST:clientip} port %{POSINT:port} %{WORD:protocol}
+SSH_BAD_USER  %{WORD:status} %{WORD:method} %{USER:username} from %{IPORHOST:clientip}
+SSH_CON_CLOSE  Connection closed by %{IPORHOST:clientip} \[%{WORD:status}\]

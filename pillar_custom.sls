@@ -1,37 +1,6 @@
-logstash-formula
-================
-
-Salt formula to install logstash.
-
-## Usage
-### Defaults
-The formula is disabled and the service is also disabled by default. The repos are managed locally.
-```
-logstash:
-  enabled: False
-  dep_pkgs:
-    - ca-certificates-java
-    - openjdk-8-jre-headless
-  dep_fromrepo: jessie-backports
-  pkg: logstash
-  patterns:
-    syslog: false
-  service:
-    name: logstash
-    state: dead
-    enable: False
-  indent: 2
-```
-
-### Configuring Logstash
- - `config` section for the main logstash.yml
- - `plugins` to install plugins, like x-pack
- - `jvm` section to configure jvm_options
- - `startup` section to configure startup_options
- - `log4j` section to configure log4j.properties
- - `patterns` section to include extra pattern files
- - `inputs`, `filters`, and `outputs` to configure the inputs, filters, and outputs
-```
+# -*- coding: utf-8 -*-
+# vim: ft=yaml
+---
 logstash:
   enabled: True
   service:
@@ -127,6 +96,7 @@ logstash:
           typesdb:
             - '/tmp/types.db'
             - '/tmp/othertypes.db'
+
   filters:
     - plugin_name: 'grok'
       patterns_dir: '/usr/share/logstash/patterns'
@@ -192,4 +162,3 @@ logstash:
     - plugin_name: elasticsearch
       hosts:
         - localhost
-```

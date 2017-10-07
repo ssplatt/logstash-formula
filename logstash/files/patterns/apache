@@ -1,0 +1,15 @@
+HTTP_SYSLOG  %{IPORHOST:clientip} %{USER:ident} %{NOTSPACE:auth} \[%{HTTPDATE}\] \"(?:%{WORD:verb} %{NOTSPACE:request}(?: HTTP/%{NUMBER:httpversion})?|%{DATA:rawrequest})\" %{NUMBER:response} (?:%{NUMBER:bytes}|-) %{QS:referrer} %{QS:agent}
+
+## HTTP Helpers
+HTTP_IPORHOST (?:(?:%{IPORHOST}|%{IPORHOST:x_forwarded_for}, %{IPORHOST:http_proxy})|-)
+HTTP_REFERRER (?:"(?:%{URI:http_referrer}|-)"|"%{DATA:http_referrer}")
+HTTP_AGENT "%{DATA:http_user_agent}"
+HTTP_USER (?:%{USER}|-)
+HTTP_REQUEST  \"(?:%{WORD:request_method} %{URIPATHPARAM:request_uri}( HTTP/%{NUMBER:http_version})?|%{DATA:request})\"
+
+##
+## Apache
+##
+
+# error Logs
+APACHE_ERROR  \[%{HTTPDERROR_DATE:time_local}\] \[%{WORD:module}:%{LOGLEVEL:loglevel}\] \[pid %{POSINT:pid}:tid %{NUMBER:tid}\]( \(%{POSINT:proxy_errorcode}\)%{DATA:proxy_message}:)?( \[client %{IPORHOST:clientip}:%{POSINT:clientport}\])? %{DATA:errorcode}: %{GREEDYDATA:error_message}

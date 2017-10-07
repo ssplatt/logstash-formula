@@ -1,0 +1,12 @@
+##
+## NGINX
+##
+
+# NGINX Helpers
+NGINX_SSL (?:\(%{DATA:ssl_protocol} - %{DATA:ssl_cipher}\)|-)
+NGINX_ERRORTIME %{YEAR}[/-]%{MONTHNUM}[/-]%{MONTHDAY} %{HOUR}:?%{MINUTE}(?::?%{SECOND})?%{ISO8601_TIMEZONE}?
+
+# NGNIX Default Logging 'combined' format (also apache combined)
+NGINX_DEFAULT_ACCESS  %{IPORHOST:remote_addr} - %{HTTP_USER:remote_user} \[%{HTTPDATE:time_local}\] %{HTTP_REQUEST} %{NUMBER:status} (?:%{NUMBER:body_bytes_sent:int}|-) %{HTTP_REFERRER} %{HTTP_AGENT}
+NGINX_ERROR_1  %{NGINX_ERRORTIME:time_local} \[%{LOGLEVEL:nginx_severity}\] (%{NUMBER:pid:int}#%{NUMBER}: \*%{NUMBER}|\*%{NUMBER}) %{GREEDYDATA:error_message}
+NGINX_ERROR_2  %{NGINX_ERRORTIME:time_local} \[%{LOGLEVEL:nginx_severity}\] %{GREEDYDATA:error_message}

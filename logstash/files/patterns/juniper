@@ -1,0 +1,10 @@
+##
+## JUNIPER
+##
+
+JUNIPER_SEND_NOTIFICATION %{WORD:mnemonic}:%{INT:message_no}: %{WORD:message_type} (?<sent_received>sent|received) (to|from) %{IP:neighbor}\+%{INT:port} \(%{WORD}\): code %{INT:bgp_code_number} \(%{DATA:bgp_code_message}\) subcode %{INT:bgp_subcode} \(%{DATA:bgp_subcode_message}\), (R|r)eason: %{GREEDYDATA:bgp_message}
+JUNIPER_RECEIVE_NOTIFICATION %{DATA:mnemonic}: (read from )?peer %{IP:neighbor} \(%{WORD:as_type} AS %{INT:asn}\): %{WORD} %{WORD:message_type} code %{INT:bgp_code_number} \(%{WORD}\) subcode %{INT:bgp_subcode} \(%{DATA:bgp_code_message}\)
+JUNIPER_SEND_RESET %{DATA:mnemonic}: %{IP:neighbor} \(%{WORD:as_type} AS %{INT:asn}\): %{GREEDYDATA:message}
+JUNIPER_BGP_RECV %{DATA:mnemonic}: read from peer %{IP:neighbor} \(%{WORD:as_type} AS %{INT:asn}\)( %{WORD})?: %{GREEDYDATA:bgp_message}
+JUNIPER_UNCONFIGURED_NEIGHBOR (?<mnemonic>bgp_listen_accept): (?<bgp_message>Connection attempt from unconfigured neighbor): %{IP:neighbor}
+JUNIPER_MD5 %{DATA:mnemonic}: %{DATA} %{IP:neighbor}:%{INT:tcp_port} %{GREEDYDATA:bgp_message}

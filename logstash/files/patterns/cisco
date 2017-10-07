@@ -1,0 +1,22 @@
+##
+## CISCO
+##
+
+INTERFACE_PREAMBLE (.*?(?=((E|e)thernet|(P|p)ort-channel)))
+CISCO_FEX_INTERFACE (?<porttype>(E|e)thernet)%{INT:fex}\/1\/%{INT:port}
+CISCO_NEXUS_LINECARD_INTERFACE_BREAKOUT (e|E)thernet%{INT:module}\/%{INT:port}\/%{INT:breakout_interface}
+CISCO_NEXUS_LINECARD_INTERFACE (e|E)thernet%{INT:module}\/%{INT:port}
+PORT_CHAN (?<porttype>[A-Za-z_-]+(?<![-_\[\]]))(?<port>\d+)
+CISCO_NEXUS_TIMESTAMP %{YEAR} %{MONTH} +%{MONTHDAY} %{TIME} %{TZ}
+CISCO_FACIL_SEVER_MNEMONIC %{DATA:facility}-%{POSINT:severity:int}-%{DATA:mnemonic}
+CISCO_INTERFACE_PARSE %{INTERFACE_PREAMBLE}?(?:\s+)?(%{PORT_CHAN:interface}|%{CISCO_FEX_INTERFACE:interface}|%{CISCO_NEXUS_LINECARD_INTERFACE_BREAKOUT:interface}|%{CISCO_NEXUS_LINECARD_INTERFACE:interface})(?:\S\s+|\s+)((?<port_message>is down \((?<down_reason>.+)\))|%{GREEDYDATA:port_message})
+CISCO_FEX_PARSE (fex|FEX|Fex)-%{INT:fex} %{GREEDYDATA:fex_message}
+CISCO_NEXUS_MSG_PARSE_GENERIC  : %{CISCO_NEXUS_TIMESTAMP}: +%%{CISCO_FACIL_SEVER_MNEMONIC}
+
+CISCO_INTERFACE %{CISCO_NEXUS_MSG_PARSE_GENERIC}:%{SPACE}%{CISCO_INTERFACE_PARSE:logmessage}
+CISCO_FEX %{CISCO_NEXUS_MSG_PARSE_GENERIC}:%{SPACE}%{CISCO_FEX_PARSE:logmessage}
+
+CISCO_BGP_UP %{CISCO_NEXUS_MSG_PARSE_GENERIC}:%{SPACE}(bgp|BGP)-%{INT:ASN} %{DATA:pid} %{DATA:vrf} neighbor %{IPORHOST:neighbor} (U|u)p
+CISCO_BGP_DOWN %{CISCO_NEXUS_MSG_PARSE_GENERIC}:%{SPACE}(bgp|BGP)-%{INT:ASN} %{DATA:pid} %{DATA:vrf} neighbor %{IPORHOST:neighbor} (D|d)own - %{GREEDYDATA:down_reason}
+CISCO_NEXUS_MSG_GENERIC  : %{CISCO_NEXUS_TIMESTAMP}: +%%{CISCO_FACIL_SEVER_MNEMONIC}: %{GREEDYDATA:logmessage}
+CISCO_NEXUS_MSG_CATCHALL  : %{CISCO_NEXUS_TIMESTAMP}: %{GREEDYDATA:logmessage}

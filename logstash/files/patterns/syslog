@@ -1,0 +1,10 @@
+##
+## MATCH ALL
+SYSLOGLINE2 %{SYSLOGBASE2} %{GREEDYDATA:logmessage}
+
+##
+## The Rest.
+
+FAIL2BAN  %{WORD:severity} \[%{DATA:fail2ban_filter}\] %{WORD:action} %{IPORHOST:clientip}
+
+SYSLOGPAMSESSION2  (?=%{GREEDYDATA:message})%{WORD:pam_module}\(%{DATA:pam_caller}\): session %{WORD:pam_session_state} for user %{USERNAME:username}(?: by %{GREEDYDATA:pam_by})?

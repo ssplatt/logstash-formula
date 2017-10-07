@@ -1,0 +1,9 @@
+##
+## UWSGI
+##
+
+# Helpers
+UWSGI_APP \[pid: %{NUMBER:uwsgi_pid}\|app: %{NUMBER:uwsgi_appid}\|req: %{NUMBER:uwsgi_request_current}/%{NUMBER:uwsgi_request_total}\]
+
+# Default UWSGI Logfile
+UWSGI  %{UWSGI_APP} %{IPORHOST:remote_host} \(%{DATA:remote_user}?\) \{%{NUMBER:CGI_Vars:int} vars in %{NUMBER:CGI_size:int} bytes\} %{SYSLOG5424SD} %{DATA:request_method} %{URIPATHPARAM:request_uri} \=\> generated %{NUMBER:Response_Size:int} bytes in %{NUMBER:Response_Time:int} msecs \(HTTP/%{NUMBER:http_version} %{NUMBER:http_status}\) %{NUMBER:Headers_Num:int} headers in %{NUMBER:Headers_Size:int} bytes %{GREEDYDATA:core_info}

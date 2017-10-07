@@ -1,0 +1,41 @@
+---
+driver:
+  name: vagrant
+
+provisioner:
+  name: salt_solo
+  is_file_root: true
+  salt_copy_filter:
+    - .kitchen
+    - .git
+  state_top:
+    base:
+      "*":
+        - test.mockup
+        - logstash
+  pillars:
+    top.sls:
+      base:
+        "*":
+          - logstash
+
+platforms:
+  - name: bento/debian-8.8
+
+suites:
+  - name: default
+    provisioner:
+      pillars:
+        logstash.sls:
+          logstash:
+            enabled: true
+
+  - name: custom
+    provisioner:
+      pillars-from-files:
+        logstash.sls: pillar_custom.sls
+  
+  - name: debug
+    provisioner:
+      pillars-from-files:
+        logstash.sls: pillar_debug.sls

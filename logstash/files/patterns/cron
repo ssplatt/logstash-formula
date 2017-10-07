@@ -1,0 +1,1 @@
+CRON (?:%{SYSLOGTIMESTAMP:timestamp}|%{TIMESTAMP_ISO8601:timestamp8601}) (?:%{SYSLOGFACILITY} )?%{SYSLOGHOST:logsource} (?<program>[a-z\-\(\)\.\/]+)\[%{POSINT:pid}(?:]) %{GREEDYDATA:logmessage}
